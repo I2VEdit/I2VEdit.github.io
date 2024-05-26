@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html>
+<head><script type="text/javascript" src="../___vscode_livepreview_injected_script"></script>
+  <meta charset="utf-8">
+  <meta name="description" content="I2VEdit: First-Frame-Guided Video Editing via Image-to-Video Diffusion Models.">
+  <meta name="keywords" content="Video Editing, Image-to-Video Model">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>I2VEdit: First-Frame-Guided Video Editing via Image-to-Video Diffusion Models</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-carousel@4.0.4/dist/css/bulma-carousel.min.css" />
+  <link rel="stylesheet" href="static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+  <link rel="icon" href="index.html">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script src="static/js/bulma-carousel.min.js"></script>
+  <script src="static/js/bulma-slider.min.js"></script>
+  <script src="static/js/index.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+
+  <script>
+    $(document).ready(function(){
+      function initializeCarousel(carouselId, indicatorId) {
+        var totalItems = $(carouselId + ' .item').length;
+        var $indicator = $(indicatorId);
+
+        $(carouselId).owlCarousel({
+          items: 1,
+          loop: true,
+          margin: 10,
+          nav: true,
+          autoplay: false,
+          autoplayTimeout: 2000,
+          autoplayHoverPause: true,
+          navText: [
+            "<div class='nav-button owl-prev' style='font-size: 6rem;'>‹</div>",
+            "<div class='nav-button owl-next' style='font-size: 6rem;'>›</div>"
+          ],
+          responsive: {
+            0: { items: 1, nav: true },
+            600: { items: 1, nav: true },
+            1000: { items: 1, nav: true, loop: true }
+          },
+          onInitialized: updateIndicator,
+          onTranslated: updateIndicator
+        });
+
+        function updateIndicator(event) {
+          var currentIndex = event.item.index - event.relatedTarget._clones.length / 2 + 1;
+          if (currentIndex > totalItems) {
+            currentIndex = currentIndex - totalItems;
+          }
+          $indicator.text(currentIndex + '/' + totalItems);
+        }
+      }
+
+      initializeCarousel('#carousel-demo1', '#carousel-indicator1');
+      initializeCarousel('#carousel-demo2', '#carousel-indicator2');
+      initializeCarousel('#carousel-demo3', '#carousel-indicator3');
+      initializeCarousel('#carousel-demo4', '#carousel-indicator4');
+      initializeCarousel('#carousel-demo5', '#carousel-indicator5');
+      initializeCarousel('#carousel-demo6', '#carousel-indicator6');
+    });
+  </script>
+  
+  <style>
+    .nav-button {
+      color: #333;
+      background-color: rgba(255, 255, 255, 0.7);
+      border-radius: 50%;
+      padding: 0.5rem;
+      margin: 0 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .owl-prev, .owl-next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 1000;
+    }
+    .owl-prev { left: -2rem; }
+    .owl-next { right: -2rem; }
+    .owl-carousel .owl-item { display: flex; 
+        justify-content: center; 
+        margin-bottom: 0; /* Adjust as needed */
+        padding-bottom: 0; /* Adjust as needed */
+    }
+    
+  </style>
+
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">I2VEdit: First-Frame-Guided Video Editing via Image-to-Video Diffusion Models</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://vicky0522.github.io/Wenqi-Ouyang/">Wenqi Ouyang</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="index.html">Yi Dong</a><sup>3</sup>,</span>
+            <span class="author-block">
+              <a href="https://scholar.google.com.hk/citations?user=jZH2IPYAAAAJ&hl=en">Lei Yang</a><sup>2</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://scholar.google.com/citations?user=N21o7qoAAAAJ&hl=en">Jianlou Si</a><sup>2</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://xingangpan.github.io/">Xingang Pan</a><sup>1</sup>
+            </span>
+          </div>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>S-Lab, Nanyang Technological University,</span>
+            <span class="author-block"><sup>2</sup>SenseTime Research and Shanghai AI Laboratory,</span>
+            <span class="author-block"><sup>3</sup>Nanyang Technological University</span>
+          </div>
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <span class="link-block">
+                <a href="https://arxiv.org/pdf/2011.12948" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fas fa-file-pdf"></i></span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2011.12948" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="ai ai-arxiv"></i></span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <!-- <span class="link-block">
+                <a href="https://www.youtube.com/watch?v=MrKrnHhk8IA" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fab fa-youtube"></i></span>
+                  <span>Video</span>
+                </a>
+              </span> -->
+              <span class="link-block">
+                <a href="index.html" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fab fa-github"></i></span>
+                  <span>Code: Coming Soon</span>
+                </a>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<section class="hero teaser">
+    <div class="container is-max-desktop">
+      <div class="hero-body">
+        <video id="teaser" autoplay muted loop playsinline height="100%">
+          <source src="static/I2VEdit_videos/cropped_problem.mp4"
+                  type="video/mp4">
+        </video>
+        <h2 class="subtitle has-text-centered">
+          I2VEdit propagates edits from a single frame to the entire video.
+        </h2>
+      </div>
+    </div>
+  </section>
+  
+  <section class="section">
+    <div class="container is-max-desktop">
+      <!-- Abstract. -->
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified">
+            <p>
+              The remarkable generative capabilities of diffusion models have motivated extensive research in both image and video editing. Compared to video editing which faces additional challenges in the time dimension, image editing has witnessed the development of more diverse, high-quality approaches and more capable software like Photoshop. 
+            </p>
+            <p>
+            In light of this gap, we introduce a novel and generic solution that extends the applicability of image editing tools to videos by propagating edits from a single frame to the entire video using a pre-trained image-to-video model. Our method, dubbed I2VEdit, adaptively preserves the visual and motion integrity of the source video depending on the extent of the edits, effectively handling global edits, local edits, and moderate shape changes, which existing methods cannot fully achieve.
+            </p>
+            <p>
+    At the core of our method are two main processes: Coarse Motion Extraction to align basic motion patterns with the original video, and Appearance Refinement for precise adjustments using fine-grained attention matching. We also incorporate a skip-interval strategy to mitigate quality degradation from auto-regressive generation across multiple video clips. Experimental results demonstrate our framework's superior performance in fine-grained video editing, proving its capability to produce high-quality, temporally consistent outputs. 
+            </div>
+        </div>
+      </div>
+      <!--/ Abstract. -->
+  </section>
+  
+  
+  
+  
+
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full">
+        <h2 class="title is-3">Visual Results</h2>
+
+        <h3 class="title is-4">Virtual Try-on</h3>
+        <div class="content has-text-justified">
+          <p>Using I2VEdit, you can edit wearable objects in source videos.</p>
+        </div>
+
+        <div class="container">
+            <div id="carousel-demo3" class="owl-carousel">
+                
+                <div class="item item-steve">
+                    <video poster="index.html" id="steve" autoplay controls muted loop playsinline style="width: 100%;">
+                      <source src="static/I2VEdit_videos/cropped_demo-sora_kimono-roboto.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                  <div class="item item-chair-tp">
+                    <video poster="index.html" id="chair-tp" autoplay controls muted loop playsinline style="width: 100%;">
+                      <source src="static/I2VEdit_videos/cropped_demo-sora_handwritten-roboto.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                  <div class="item item-blueshirt">
+                    <video poster="index.html" id="blueshirt" autoplay controls muted loop playsinline style="width: 100%;">
+                      <source src="static/I2VEdit_videos/cropped_demo-woman_face-roboto.mp4" type="video/mp4">
+                    </video>
+                  </div>
+                  <div class="item item-blueshirt">
+                    <video poster="index.html" id="blueshirt" autoplay controls muted loop playsinline style="width: 100%;">
+                      <source src="static/I2VEdit_videos/cropped_demo-girl-roboto.mp4" type="video/mp4">
+                    </video>
+                  </div>            
+              
+            </div>
+            <div id="carousel-indicator3" class="has-text-centered mt-4">1/5</div>
+          </div>
+
+        <div class="content has-text-justified">
+            <div class="container">
+            <div id="carousel-demo1" class="owl-carousel">
+                
+                <div class="item item-shiba">
+                <video poster="index.html" id="shiba" autoplay controls muted loop playsinline style="width: 100%;">
+                    <source src="static/I2VEdit_videos/cropped_demo-tryon-roboto.mp4" type="video/mp4">
+                </video>
+                </div>
+                <div class="item item-fullbody">
+                <video poster="index.html" id="fullbody" autoplay controls muted loop playsinline style="width: 100%;">
+                    <source src="static/I2VEdit_videos/cropped_demo-tryon-grey-2-5-roboto.mp4" type="video/mp4">
+                </video>
+                </div>
+                
+            </div>
+            <div id="carousel-indicator1" class="has-text-centered mt-4">1/5</div>
+            </div>
+        </div>
+
+        
+
+        
+
+        <h3 class="title is-4">Subject Replacement</h3>
+        <div class="content has-text-justified">
+          <p>Using I2VEdit, you can replace subjects of source videos.</p>
+        </div>        
+
+        <div class="container">
+            <div id="carousel-demo2" class="owl-carousel">
+              <div class="item item-fullbody">
+                  <video poster="index.html" id="fullbody" autoplay controls muted loop playsinline style="width: 100%;">
+                    <source src="static/I2VEdit_videos/cropped_demo-sora_robot-roboto.mp4" type="video/mp4">
+                  </video>
+                </div>
+              <div class="item item-steve">
+                <video poster="index.html" id="steve" autoplay controls muted loop playsinline style="width: 100%;">
+                  <source src="static/I2VEdit_videos/cropped_demo-rocket-roboto.mp4" type="video/mp4">
+                </video>
+              </div>
+              <div class="item item-chair-tp">
+                <video poster="index.html" id="chair-tp" autoplay controls muted loop playsinline style="width: 100%;">
+                  <source src="static/I2VEdit_videos/cropped_demo-swan-roboto.mp4" type="video/mp4">
+                </video>
+              </div>
+              
+              
+            </div>
+            <div id="carousel-indicator2" class="has-text-centered mt-4">1/5</div>
+          </div>
+
+
+
+          
+
+          
+            
+                
+              
+             
+          
+          
+        <h3 class="title is-4">Style Transfer</h3>
+        
+        <div class="content has-text-justified">
+          <p>Using I2VEdit, you can change styles of source videos.</p>
+        </div>
+        
+        <div class="container">
+          <div id="carousel-demo4" class="owl-carousel">
+            <div class="item item-fullbody">
+                <video poster="index.html" id="fullbody" autoplay controls muted loop playsinline style="width: 100%;">
+                  <source src="static/I2VEdit_videos/cropped_demo-grey-roboto-s.mp4" type="video/mp4">
+                </video>
+              </div>
+            <div class="item item-steve">
+              <video poster="index.html" id="steve" autoplay controls muted loop playsinline style="width: 100%;">
+                <source src="static/I2VEdit_videos/cropped_demo-sora_cyberpunk-roboto.mp4" type="video/mp4">
+              </video>
+            </div>
+            <div class="item item-chair-tp">
+              <video poster="index.html" id="chair-tp" autoplay controls muted loop playsinline style="width: 100%;">
+                <source src="static/I2VEdit_videos/cropped_demo-girl_cool-roboto.mp4" type="video/mp4">
+              </video>
+            </div>
+            <div class="item item-shiba">
+              <video poster="index.html" id="shiba" autoplay controls muted loop playsinline style="width: 100%;">
+                <source src="static/I2VEdit_videos/cropped_demo-woman_warmth-roboto.mp4" type="video/mp4">
+              </video>
+            </div>
+            <div class="item item-fullbody">
+              <video poster="index.html" id="fullbody" autoplay controls muted loop playsinline style="width: 100%;">
+                <source src="static/I2VEdit_videos/cropped_demo-woman_face-blue-roboto.mp4" type="video/mp4">
+              </video>
+            </div>
+            
+          </div>
+          <div id="carousel-indicator4" class="has-text-centered mt-4">1/5</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<section class="section">
+    <div class="container is-max-desktop">
+  
+      <div class="columns is-centered">
+  
+   <!-- Comparisons -->
+      
+        <div class="column is-full">
+          <h2 class="title is-3">Comparisons</h2>
+  
+          <!-- Interpolating. -->
+          <h3 class="title is-4">Image-Guided Methods</h3>
+          We compare I2VEdit with other image-guided video editing methods.
+          <div class="container">
+            <div id="carousel-demo5" class="owl-carousel">
+              <div class="item item-steve">
+                <video poster="index.html" id="steve" autoplay controls muted loop playsinline style="width: 100%;">
+                  <source src="static/I2VEdit_videos/cropped_related_works_1%20I2V-roboto.mp4" type="video/mp4">
+                </video>
+              </div>
+              <div class="item item-chair-tp">
+                <video poster="index.html" id="chair-tp" autoplay controls muted loop playsinline style="width: 100%;">
+                  <source src="static/I2VEdit_videos/cropped_related_works_2%20I2V-roboto.mp4" type="video/mp4">
+                </video>
+              </div>
+              <div class="item item-shiba">
+                <video poster="index.html" id="shiba" autoplay controls muted loop playsinline style="width: 100%;">
+                  <source src="static/I2VEdit_videos/cropped_related_works_3%20I2V-roboto.mp4" type="video/mp4">
+                </video>
+              </div>
+              <div class="item item-fullbody">
+                <video poster="index.html" id="fullbody" autoplay controls muted loop playsinline style="width: 100%;">
+                  <source src="static/I2VEdit_videos/cropped_related_works_4%20I2V-roboto.mp4" type="video/mp4">
+                </video>
+              </div>
+              <div class="item item-fullbody">
+                <video poster="index.html" id="fullbody" autoplay controls muted loop playsinline style="width: 100%;">
+                  <source src="static/I2VEdit_videos/cropped_related_works_5%20I2V-roboto.mp4" type="video/mp4">
+                </video>
+              </div>
+            </div>
+            <div id="carousel-indicator5" class="has-text-centered mt-4">1/5</div>
+          </div>
+          <br/>
+          <!--/ Interpolating. -->
+  
+          <!-- Re-rendering. -->
+          <h3 class="title is-4">Text-Guided Methods</h3>
+          <div class="content has-text-justified">
+            <p>
+              We compare I2VEdit with other text-guided video editing methods.
+            </p>
+          </div>
+          <div class="container">
+            <div id="carousel-demo6" class="owl-carousel">
+              <div class="item item-steve">
+                <video poster="index.html" id="steve" autoplay controls muted loop playsinline style="width: 100%;">
+                  <source src="static/I2VEdit_videos/cropped_related_works_1%20T2V-roboto.mp4" type="video/mp4">
+                </video>
+              </div>
+              <div class="item item-chair-tp">
+                <video poster="index.html" id="chair-tp" autoplay controls muted loop playsinline style="width: 100%;">
+                  <source src="static/I2VEdit_videos/cropped_related_works_2%20T2V-roboto.mp4" type="video/mp4">
+                </video>
+              </div>
+              <div class="item item-shiba">
+                <video poster="index.html" id="shiba" autoplay controls muted loop playsinline style="width: 100%;">
+                  <source src="static/I2VEdit_videos/cropped_related_works_3%20T2V-roboto.mp4" type="video/mp4">
+                </video>
+              </div>
+              <div class="item item-fullbody">
+                <video poster="index.html" id="fullbody" autoplay controls muted loop playsinline style="width: 100%;">
+                  <source src="static/I2VEdit_videos/cropped_related_works_4%20T2V-roboto.mp4" type="video/mp4">
+                </video>
+              </div>
+              <div class="item item-fullbody">
+                <video poster="index.html" id="fullbody" autoplay controls muted loop playsinline style="width: 100%;">
+                  <source src="static/I2VEdit_videos/cropped_related_works_5%20T2V-roboto.mp4" type="video/mp4">
+                </video>
+              </div>
+            </div>
+            <div id="carousel-indicator6" class="has-text-centered mt-4">1/5</div>
+          </div>
+          <!--/ Re-rendering. -->
+  
+        </div>
+      
+      <!--/ Animation. -->
+      
+      </div>
+  </section>
+
+
+<!-- <section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX (to Update!!!)</h2>
+    <pre><code>@article{park2021nerfies,
+  author    = {Park, Keunhong and Sinha, Utkarsh and Barron, Jonathan T. and Bouaziz, Sofien and Goldman, Dan B and Seitz, Steven M. and Martin-Brualla, Ricardo},
+  title     = {Nerfies: Deformable Neural Radiance Fields},
+  journal   = {ICCV},
+  year      = {2021},
+}</code></pre>
+  </div>
+</section> -->
+
+</body>
+
+<footer class="footer">
+    <!-- <div class="container">
+      <div class="content has-text-centered">
+        <a class="icon-link" href="https://arxiv.org/abs/2309.03897" target="_blank">
+          <i class="fas fa-file-pdf"></i>
+        </a>
+        <a class="icon-link" href="https://github.com/sczhou/ProPainter" target="_blank">
+          <i class="fab fa-github"></i>
+        </a>
+        <a class="icon-link" href="https://huggingface.co/spaces/sczhou/ProPainter" target="_blank">
+          <img src="./assets/images/hf_black.png">
+        </a>
+        <a class="icon-link" href="https://youtu.be/92EHfgCO5-Q" target="_blank">
+          <i class="fab fa-youtube"></i>
+        </a>
+      </div> -->
+      <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-8">
+          <div class="content">
+            <div class="columns is-centered"><p>
+              This website template is borrowed from <a href="https://github.com/nerfies/nerfies.github.io" target="_blank">Nerfies</a>. For method comparison, some of the edited first frames are directly sourced from <a href="https://tiger-ai-lab.github.io/AnyV2V/" target="_blank">AnyV2V</a>. The source videos are from <a href="https://www.pexels.com/search/videos/videos/" target="_blank">Pexels Video</a>, <a href="https://vision.cs.ubc.ca/datasets/fashion/" target="_blank">UBC Dress</a>, <a href="https://davischallenge.org/davis2017/code.html#unsupervised" target="_blank">DAVIS Dataset</a>, and <a href="https://openai.com/index/video-generation-models-as-world-simulators/" target="_blank">SORA</a>. Contact us for any copyright concerns.
+            </p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+     
+    </div>
+  </footer>
+
+
+</html>
